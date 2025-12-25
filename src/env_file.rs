@@ -96,11 +96,10 @@ impl EnvFile {
             if let Entry::KeyValue {
                 key: k, value: v, ..
             } = entry
+                && k == key
             {
-                if k == key {
-                    *v = value.to_string();
-                    return;
-                }
+                *v = value.to_string();
+                return;
             }
         }
 
@@ -117,11 +116,10 @@ impl EnvFile {
             if let Entry::KeyValue {
                 key: k, comment: c, ..
             } = entry
+                && k == key
             {
-                if k == key {
-                    *c = Some(comment.to_string());
-                    return;
-                }
+                *c = Some(comment.to_string());
+                return;
             }
         }
     }
@@ -142,11 +140,10 @@ impl EnvFile {
             if let Entry::KeyValue {
                 key: k, comment, ..
             } = entry
+                && k == key
             {
-                if k == key {
-                    *comment = None;
-                    return;
-                }
+                *comment = None;
+                return;
             }
         }
     }

@@ -173,7 +173,7 @@ fn parse_list_args(args: &[String]) -> Result<(ListMode, Option<&str>)> {
     }
 }
 
-fn parse_get_del_args(args: &[String]) -> Result<(Target, Option<&str>)> {
+fn parse_get_del_args(args: &[String]) -> Result<(Target<'_>, Option<&str>)> {
     if args.is_empty() {
         return Err(anyhow::anyhow!(
             "You need to provide what to get [key|comment|header].\nExample: envq get key FOO"
@@ -218,7 +218,7 @@ fn parse_get_del_args(args: &[String]) -> Result<(Target, Option<&str>)> {
     }
 }
 
-fn parse_set_args(args: &[String]) -> Result<(Target, String, Option<&str>)> {
+fn parse_set_args(args: &[String]) -> Result<(Target<'_>, String, Option<&str>)> {
     if args.is_empty() {
         return Err(anyhow::anyhow!(
             "You need to provide what to set [key|comment|header].\nExample: envq set key FOO VALUE"
