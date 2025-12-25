@@ -17,12 +17,16 @@ jobs:
         include:
           - target: aarch64-apple-darwin
             os: macos-latest
-            use-cross: false
+            homebrew_arch: darwin-arm64
           # - target: x86_64-apple-darwin
-          #   os: macos-latest
-          #   use-cross: false
+          #   os: macos-13
+          #   homebrew_arch: darwin-amd64
           # - target: x86_64-unknown-linux-musl
           #   os: ubuntu-latest
+          #   homebrew_arch: linux-amd64
+          # - target: aarch64-unknown-linux-musl
+          #   os: ubuntu-latest
+          #   homebrew_arch: linux-arm64
           #   use-cross: true
     steps:
       - uses: actions/checkout@v6
@@ -41,15 +45,15 @@ jobs:
 
       - name: create archive
         run: |
+          VERSION=${GITHUB_REF_NAME#v}
           cd target/${{ matrix.target }}/release
-          tar czf ../../../envq-${{ github.ref_name }}-${{ matrix.target }}.tar.gz envq
-          cd ../../..
+          tar czf ../../../envq-${VERSION}-${{ matrix.homebrew_arch }}.tar.gz envq
 
       - name: upload artifact
         uses: actions/upload-artifact@v6
         with:
           name: envq-${{ matrix.target }}
-          path: envq-${{ github.ref_name }}-${{ matrix.target }}.tar.gz
+          path: envq-*-${{ matrix.homebrew_arch }}.tar.gz
 
   release:
     needs: build
@@ -70,7 +74,7 @@ jobs:
           gh release create ${{ github.ref_name }} \
             --title ${{ github.ref_name }} \
             --generate-notes \
-            envq-${{ github.ref_name }}-*.tar.gz
+            envq-*.tar.gz
 
   homebrew:
     needs: release
@@ -78,10 +82,19 @@ jobs:
     environment: release
     steps:
       - name: update homebrew tap
-        uses: mislav/bump-homebrew-formula-action@v3
+        uses: Justintime50/homebrew-releaser@v1
         with:
-          formula-name: envq
-          homebrew-tap: tcurdt/homebrew-tap
-          download-url: https://github.com/tcurdt/envq/archive/refs/tags/${{ github.ref_name }}.tar.gz
-        env:
-          COMMITTER_TOKEN: ${{ secrets.PAT_RELEASE }}
+          homebrew_owner: tcurdt
+          homebrew_tap: homebrew-tap
+          github_token: ${{ secrets.PAT_RELEASE }}
+          target_darwin_arm64: true
+          # target_darwin_amd64: true
+          # target_linux_arm64: true
+          # target_linux_amd64: true
+          install: |
+            bin.install "envq"
+          test: |
+            assert_match "envq", shell_output("#{bin}/envq --help")
+
+            (testpath/"test.env").write("KEY=value\n")
+            assert_equal "value", shell_output("#{bin}/envq get KEY test.env").strip
