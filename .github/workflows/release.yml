@@ -86,6 +86,7 @@ jobs:
         with:
           homebrew_owner: tcurdt
           homebrew_tap: homebrew-tap
+          formula_folder: Formula
           github_token: ${{ secrets.PAT_RELEASE }}
           target_darwin_arm64: true
           # target_darwin_amd64: true
