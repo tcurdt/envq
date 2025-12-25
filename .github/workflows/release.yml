@@ -14,8 +14,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: update homebrew tap
-        uses: dawidd6/action-homebrew-bump-formula@v7
+        uses: Justintime50/homebrew-releaser@v1
         with:
-          token: ${{ secrets.PAT_RELEASE }}
-          formula: envq
-          tap: tcurdt/homebrew-tap
+          homebrew_owner: tcurdt
+          homebrew_tap: homebrew-tap
+          github_token: ${{ secrets.PAT_RELEASE }}
+          install: |
+            system "cargo", "install", *std_cargo_args
+          test: |
+            assert_match "envq", shell_output("#{bin}/envq --help")
+
+            (testpath/"test.env").write("KEY=value\n")
+            assert_equal "value", shell_output("#{bin}/envq get KEY test.env").strip
+          depends_on: |
+            "rust" => :build
