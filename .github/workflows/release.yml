@@ -1,0 +1,20 @@
+name: release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  homebrew:
+    runs-on: ubuntu-latest
+    steps:
+      - name: update homebrew tap
+        uses: dawidd6/action-homebrew-bump-formula@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          formula: envq
+          tap: tcurdt/homebrew-tap
