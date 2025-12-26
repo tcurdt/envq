@@ -84,6 +84,7 @@ jobs:
       - name: update homebrew tap
         uses: Justintime50/homebrew-releaser@v3.0.1
         with:
+          debug: true
           homebrew_owner: tcurdt
           homebrew_tap: homebrew-tap
           github_token: ${{ secrets.PAT_RELEASE }}
