@@ -88,6 +88,7 @@ jobs:
           homebrew_tap: homebrew-tap
           formula_folder: Formula
           github_token: ${{ secrets.PAT_RELEASE }}
+          version: ${{ github.ref_name }}
           target_darwin_arm64: true
           # target_darwin_amd64: true
           # target_linux_arm64: true
