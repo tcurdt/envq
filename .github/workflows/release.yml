@@ -50,7 +50,7 @@ jobs:
           tar czf ../../../envq-${VERSION}-${{ matrix.homebrew_arch }}.tar.gz envq
 
       - name: upload artifact
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: envq-${{ matrix.target }}
           path: envq-*-${{ matrix.homebrew_arch }}.tar.gz
@@ -62,7 +62,7 @@ jobs:
       - uses: actions/checkout@v6
 
       - name: download artifacts
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           pattern: envq-*
           merge-multiple: true
