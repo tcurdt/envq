@@ -1,4 +1,4 @@
-set quiet
+set quiet := true
 
 default:
     just --list
@@ -12,7 +12,7 @@ format:
     cargo fmt
 
 lint:
-    cargo clippy
+    cargo clippy -- -D warnings
 
 test:
     cargo test
@@ -30,4 +30,4 @@ update:
     cargo update
 
 run *args:
-    cargo run -- {{args}}
+    cargo run -- {{ args }}
