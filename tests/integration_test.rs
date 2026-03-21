@@ -15,15 +15,7 @@ fn create_test_env(dir: &TempDir) -> std::path::PathBuf {
 
 // helper to create a command for the envq binary
 fn envq_cmd() -> assert_cmd::Command {
-    assert_cmd::Command::new(
-        std::env::current_exe()
-            .unwrap()
-            .parent()
-            .unwrap()
-            .parent()
-            .unwrap()
-            .join("envq"),
-    )
+    assert_cmd::Command::cargo_bin("envq").unwrap()
 }
 
 #[test]
