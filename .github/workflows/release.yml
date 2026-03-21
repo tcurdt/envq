@@ -61,6 +61,7 @@ jobs:
 
   release:
     needs: build
+    if: github.event_name != 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -82,6 +83,7 @@ jobs:
 
   homebrew:
     needs: release
+    if: github.event_name != 'workflow_dispatch'
     runs-on: ubuntu-latest
     environment: release
     steps:
