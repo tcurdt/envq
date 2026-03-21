@@ -26,10 +26,7 @@ fn envq_cmd() -> assert_cmd::Command {
     )
 }
 
-// ignored because atty detection doesn't work properly in test environments
-// work when testing manually
 #[test]
-#[ignore]
 fn test_get_missing_file_or_stdin() {
     envq_cmd()
         .arg("get")
@@ -40,7 +37,6 @@ fn test_get_missing_file_or_stdin() {
 }
 
 #[test]
-#[ignore]
 fn test_list_missing_file_or_stdin() {
     envq_cmd()
         .arg("list")

@@ -1,6 +1,6 @@
 use anyhow::Result;
 use clap::{Parser, Subcommand};
-use std::io::{self, Read, Write};
+use std::io::{self, IsTerminal, Read, Write};
 use std::process;
 
 mod env_file;
@@ -282,11 +282,14 @@ fn read_input(file_path: Option<&str>) -> Result<String> {
         Some(path) => Ok(std::fs::read_to_string(path)?),
         None => {
             // check if stdin is a terminal (no piped input)
-            if atty::is(atty::Stream::Stdin) {
+            if io::stdin().is_terminal() {
                 return Err(anyhow::anyhow!("Missing file or stdin."));
             }
             let mut buffer = String::new();
             io::stdin().lock().read_to_string(&mut buffer)?;
+            if buffer.is_empty() {
+                return Err(anyhow::anyhow!("Missing file or stdin."));
+            }
             Ok(buffer)
         }
     }
